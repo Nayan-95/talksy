@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat App</title>
+    <title>Talksy - Modern Chat App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -12,12 +13,29 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        :root {
+            --primary: #6C63FF;
+            --primary-dark: #5752d4;
+            --secondary: #FF6584;
+            --dark: #2D3748;
+            --light: #F8FAFC;
+            --gray: #718096;
+            --gray-light: #E2E8F0;
+            --success: #48BB78;
+            --warning: #ED8936;
+            --error: #F56565;
+            --radius: 12px;
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --transition: all 0.3s ease;
+        }
+
         body {
-            background-color: #f5f5f5;
-            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
             height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
         .container {
@@ -28,18 +46,51 @@
 
         /* Auth Styles */
         .auth-container {
-            max-width: 400px;
+            max-width: 440px;
             margin: 50px auto;
-            padding: 20px;
+            padding: 40px;
             background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .auth-logo {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .auth-logo i {
+            color: var(--secondary);
         }
 
         .auth-container h2 {
             margin-bottom: 20px;
             text-align: center;
-            color: #4a5568;
+            color: var(--dark);
+            font-weight: 600;
         }
 
         .auth-form {
@@ -48,61 +99,94 @@
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            position: relative;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             font-weight: 500;
+            color: var(--dark);
         }
 
         .form-group input {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 14px 16px;
+            border: 2px solid var(--gray-light);
+            border-radius: var(--radius);
             font-size: 16px;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+            outline: none;
         }
 
         .btn {
-            padding: 10px 15px;
-            background-color: #4299e1;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: var(--radius);
             cursor: pointer;
             font-size: 16px;
-            transition: background-color 0.2s;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px rgba(108, 99, 255, 0.2);
         }
 
         .btn:hover {
-            background-color: #3182ce;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(108, 99, 255, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
         }
 
         .btn-secondary {
-            background-color: #718096;
+            background: linear-gradient(135deg, var(--gray), #5a6268);
         }
 
         .btn-secondary:hover {
-            background-color: #4a5568;
+            box-shadow: 0 6px 12px rgba(113, 128, 150, 0.3);
         }
 
         .auth-switch {
             text-align: center;
-            margin-top: 15px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid var(--gray-light);
         }
 
         .auth-switch a {
-            color: #4299e1;
+            color: var(--primary);
             text-decoration: none;
             cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .auth-switch a:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
         }
 
         .error-message {
-            color: #e53e3e;
+            color: var(--error);
             margin-top: 10px;
             text-align: center;
+            padding: 10px;
+            background-color: rgba(245, 101, 101, 0.1);
+            border-radius: var(--radius);
+            border-left: 4px solid var(--error);
         }
 
         /* Main App Styles */
@@ -111,21 +195,50 @@
             flex: 1;
             flex-direction: column;
             height: 100vh;
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-radius: 0;
+            overflow: hidden;
         }
 
         .header {
-            background-color: #2d3748;
+            background: linear-gradient(135deg, var(--dark), #1a202c);
             color: white;
-            padding: 15px 20px;
+            padding: 16px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .app-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .app-logo i {
+            color: var(--secondary);
         }
 
         .user-info {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: white;
         }
 
         .main-content {
@@ -136,17 +249,27 @@
 
         /* Groups Panel */
         .groups-panel {
-            width: 300px;
-            background-color: white;
-            border-right: 1px solid #e2e8f0;
+            width: 320px;
+            background-color: var(--light);
+            border-right: 1px solid var(--gray-light);
             display: flex;
             flex-direction: column;
+            transition: var(--transition);
         }
 
         .panel-header {
-            padding: 15px;
-            border-bottom: 1px solid #e2e8f0;
+            padding: 20px;
+            border-bottom: 1px solid var(--gray-light);
             font-weight: 600;
+            font-size: 18px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .panel-header i {
+            color: var(--primary);
         }
 
         .groups-list {
@@ -156,34 +279,79 @@
         }
 
         .group-item {
-            padding: 12px 15px;
+            padding: 16px 20px;
             cursor: pointer;
-            border-bottom: 1px solid #f7fafc;
-            transition: background-color 0.2s;
+            border-bottom: 1px solid var(--gray-light);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         .group-item:hover {
-            background-color: #f7fafc;
+            background-color: rgba(108, 99, 255, 0.05);
         }
 
         .group-item.active {
-            background-color: #ebf8ff;
-            border-left: 3px solid #4299e1;
+            background-color: rgba(108, 99, 255, 0.1);
+            border-left: 4px solid var(--primary);
+        }
+
+        .group-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .group-info {
+            flex: 1;
         }
 
         .group-name {
-            font-weight: 500;
-            margin-bottom: 5px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--dark);
         }
 
         .group-meta {
+            font-size: 13px;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .group-meta i {
             font-size: 12px;
-            color: #718096;
         }
 
         .create-group-form {
-            padding: 15px;
-            border-top: 1px solid #e2e8f0;
+            padding: 20px;
+            border-top: 1px solid var(--gray-light);
+            background: white;
+        }
+
+        .create-group-form input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--gray-light);
+            border-radius: var(--radius);
+            font-size: 16px;
+            margin-bottom: 12px;
+            transition: var(--transition);
+        }
+
+        .create-group-form input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+            outline: none;
         }
 
         /* Chat Panel */
@@ -192,123 +360,231 @@
             display: flex;
             flex-direction: column;
             background-color: white;
+            position: relative;
         }
 
         .chat-header {
-            padding: 15px 20px;
-            border-bottom: 1px solid #e2e8f0;
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--gray-light);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+
+        .chat-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chat-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .chat-info h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .chat-info p {
+            font-size: 13px;
+            color: var(--gray);
+        }
+
+        .chat-actions {
+            display: flex;
+            gap: 10px;
         }
 
         .chat-messages {
             flex: 1;
-            padding: 20px;
+            padding: 24px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 16px;
+            background-color: #f8fafc;
+            background-image: 
+                radial-gradient(circle at 25px 25px, rgba(108, 99, 255, 0.1) 2%, transparent 2.5%),
+                radial-gradient(circle at 75px 75px, rgba(255, 101, 132, 0.1) 2%, transparent 2.5%);
+            background-size: 100px 100px;
         }
 
         .message {
             max-width: 70%;
-            padding: 10px 15px;
+            padding: 14px 18px;
             border-radius: 18px;
             position: relative;
+            animation: messageAppear 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        @keyframes messageAppear {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .message.own {
             align-self: flex-end;
-            background-color: #4299e1;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
-            border-bottom-right-radius: 4px;
+            border-bottom-right-radius: 6px;
         }
 
         .message.other {
             align-self: flex-start;
-            background-color: #f1f5f9;
-            color: #2d3748;
-            border-bottom-left-radius: 4px;
+            background: white;
+            color: var(--dark);
+            border-bottom-left-radius: 6px;
+            border: 1px solid var(--gray-light);
         }
 
         .message-sender {
             font-weight: 600;
             font-size: 14px;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
+            color: var(--primary);
         }
 
         .message-body {
             word-wrap: break-word;
+            line-height: 1.4;
         }
 
         .message-time {
             font-size: 12px;
             text-align: right;
-            margin-top: 5px;
-            opacity: 0.7;
+            margin-top: 6px;
+            opacity: 0.8;
         }
 
         .chat-input-container {
-            padding: 15px 20px;
-            border-top: 1px solid #e2e8f0;
+            padding: 20px 24px;
+            border-top: 1px solid var(--gray-light);
             display: flex;
-            gap: 10px;
+            gap: 12px;
+            background: white;
         }
 
         .chat-input {
             flex: 1;
-            padding: 12px 15px;
-            border: 1px solid #e2e8f0;
+            padding: 14px 18px;
+            border: 2px solid var(--gray-light);
             border-radius: 24px;
             resize: none;
             font-size: 16px;
-            max-height: 100px;
+            max-height: 120px;
+            transition: var(--transition);
+        }
+
+        .chat-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+            outline: none;
         }
 
         .send-btn {
-            padding: 12px 20px;
-            background-color: #4299e1;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
             border: none;
-            border-radius: 24px;
+            border-radius: 50%;
             cursor: pointer;
             font-weight: 600;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            box-shadow: 0 4px 6px rgba(108, 99, 255, 0.2);
         }
 
         .send-btn:hover {
-            background-color: #3182ce;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(108, 99, 255, 0.3);
+        }
+
+        .send-btn:active {
+            transform: translateY(0);
+        }
+
+        .send-btn:disabled {
+            background: var(--gray-light);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
         .typing-indicator {
-            padding: 5px 20px;
+            padding: 8px 24px;
             font-style: italic;
-            color: #718096;
+            color: var(--gray);
             font-size: 14px;
             min-height: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: var(--gray);
+            animation: typingAnimation 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingAnimation {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
         }
 
         /* Responsive */
         @media (max-width: 768px) {
             .groups-panel {
                 width: 100%;
-                display: none;
+                position: absolute;
+                z-index: 10;
+                height: 100%;
+                transform: translateX(-100%);
             }
             
             .groups-panel.active {
-                display: flex;
+                transform: translateX(0);
             }
             
             .chat-panel {
-                display: none;
-            }
-            
-            .chat-panel.active {
-                display: flex;
+                width: 100%;
             }
             
             .mobile-toggle {
                 display: block;
+            }
+
+            .message {
+                max-width: 85%;
             }
         }
 
@@ -318,29 +594,122 @@
             border: none;
             font-size: 20px;
             cursor: pointer;
-            color: #4a5568;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .mobile-toggle:hover {
+            background: rgba(255,255,255,0.1);
         }
 
         .join-prompt {
             text-align: center;
-            color: #718096;
-            padding: 40px 20px;
+            color: var(--gray);
+            padding: 60px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .join-prompt i {
+            font-size: 48px;
+            color: var(--gray-light);
+            margin-bottom: 10px;
         }
 
         .join-prompt h3 {
             margin-bottom: 10px;
-            color: #4a5568;
+            color: var(--dark);
+            font-weight: 600;
         }
 
         .join-prompt p {
             margin-bottom: 20px;
+            max-width: 300px;
+            line-height: 1.5;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Animation for new messages */
+        @keyframes highlight {
+            0% { background-color: rgba(108, 99, 255, 0.2); }
+            100% { background-color: transparent; }
+        }
+
+        .message.highlight {
+            animation: highlight 2s ease;
+        }
+
+        /* Online indicator */
+        .online-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--success);
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            border: 2px solid white;
+        }
+
+        /* Empty state illustrations */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 40px;
+            text-align: center;
+            color: var(--gray);
+        }
+
+        .empty-state i {
+            font-size: 64px;
+            margin-bottom: 20px;
+            color: var(--gray-light);
+        }
+
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: var(--dark);
         }
     </style>
 </head>
 <body>
     <!-- Authentication Section -->
     <div id="auth-container" class="auth-container">
-        <h2 id="auth-title">Login to Chat App</h2>
+        <div class="auth-header">
+            <div class="auth-logo">
+                <i class="fas fa-comments"></i>
+                Talksy
+            </div>
+            <h2 id="auth-title">Welcome Back!</h2>
+        </div>
         <form id="auth-form" class="auth-form">
             <div class="form-group" id="name-field" style="display: none;">
                 <label for="displayName">Display Name</label>
@@ -354,7 +723,10 @@
                 <label for="password">Password</label>
                 <input type="password" id="password" placeholder="Enter your password">
             </div>
-            <button type="submit" class="btn" id="auth-button">Login</button>
+            <button type="submit" class="btn" id="auth-button">
+                <i class="fas fa-sign-in-alt"></i>
+                Login
+            </button>
             <div class="error-message" id="auth-error"></div>
         </form>
         <div class="auth-switch">
@@ -365,25 +737,47 @@
     <!-- Main App Section -->
     <div id="app" class="app">
         <header class="header">
-            <button class="mobile-toggle" id="groups-toggle">☰</button>
-            <h1>Chat App</h1>
+            <button class="mobile-toggle" id="groups-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="app-logo">
+                <i class="fas fa-comments"></i>
+                Talksy
+            </div>
             <div class="user-info">
+                <div class="user-avatar" id="user-avatar">
+                    U
+                </div>
                 <span id="user-display-name">User</span>
-                <button class="btn btn-secondary" id="logout-btn">Logout</button>
+                <button class="btn btn-secondary" id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
             </div>
         </header>
 
         <div class="main-content">
             <!-- Groups Panel -->
             <div id="groups-panel" class="groups-panel active">
-                <div class="panel-header">Chat Groups</div>
+                <div class="panel-header">
+                    <i class="fas fa-users"></i>
+                    Chat Groups
+                </div>
                 <div class="groups-list" id="groups-list">
                     <!-- Groups will be populated here -->
+                    <div class="empty-state">
+                        <i class="fas fa-comment-slash"></i>
+                        <h3>No Groups Yet</h3>
+                        <p>Create your first group to start chatting!</p>
+                    </div>
                 </div>
                 <div class="create-group-form">
-                    <input type="text" id="new-group-name" placeholder="New group name" style="width: 100%; padding: 10px; margin-bottom: 10px;">
+                    <input type="text" id="new-group-name" placeholder="New group name">
                     <div style="display: flex; gap: 10px;">
-                        <button class="btn" id="create-group-btn" style="flex: 1;">Create Group</button>
+                        <button class="btn" id="create-group-btn" style="flex: 1;">
+                            <i class="fas fa-plus"></i>
+                            Create Group
+                        </button>
                     </div>
                 </div>
             </div>
@@ -391,22 +785,40 @@
             <!-- Chat Panel -->
             <div id="chat-panel" class="chat-panel">
                 <div class="chat-header">
-                    <h2 id="current-group-name">Select a group to start chatting</h2>
-                    <div>
-                        <button class="btn" id="join-group-btn" style="display: none;">Join Group</button>
-                        <button class="btn btn-secondary" id="leave-group-btn" style="display: none;">Leave Group</button>
+                    <div class="chat-title">
+                        <div class="chat-avatar" id="current-group-avatar">G</div>
+                        <div class="chat-info">
+                            <h2 id="current-group-name">Select a group to start chatting</h2>
+                            <p id="current-group-meta">Choose from your groups</p>
+                        </div>
+                    </div>
+                    <div class="chat-actions">
+                        <button class="btn" id="join-group-btn" style="display: none;">
+                            <i class="fas fa-user-plus"></i>
+                            Join Group
+                        </button>
+                        <button class="btn btn-secondary" id="leave-group-btn" style="display: none;">
+                            <i class="fas fa-user-minus"></i>
+                            Leave Group
+                        </button>
                     </div>
                 </div>
                 <div class="chat-messages" id="chat-messages">
                     <!-- Messages will be populated here -->
                     <div class="join-prompt">
-                        Select a group to view messages
+                        <i class="fas fa-comments"></i>
+                        <h3>Welcome to Talksy!</h3>
+                        <p>Select a group from the sidebar to start chatting with others.</p>
                     </div>
                 </div>
-                <div class="typing-indicator" id="typing-indicator"></div>
+                <div class="typing-indicator" id="typing-indicator">
+                    <!-- Typing indicator will appear here -->
+                </div>
                 <div class="chat-input-container">
                     <textarea class="chat-input" id="message-input" placeholder="Type a message..." disabled></textarea>
-                    <button class="send-btn" id="send-btn" disabled>Send</button>
+                    <button class="send-btn" id="send-btn" disabled>
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -434,12 +846,15 @@
         const passwordInput = document.getElementById('password');
         const displayNameInput = document.getElementById('displayName');
         const userDisplayName = document.getElementById('user-display-name');
+        const userAvatar = document.getElementById('user-avatar');
         const logoutBtn = document.getElementById('logout-btn');
         const groupsList = document.getElementById('groups-list');
         const chatMessages = document.getElementById('chat-messages');
         const messageInput = document.getElementById('message-input');
         const sendBtn = document.getElementById('send-btn');
         const currentGroupName = document.getElementById('current-group-name');
+        const currentGroupAvatar = document.getElementById('current-group-avatar');
+        const currentGroupMeta = document.getElementById('current-group-meta');
         const joinGroupBtn = document.getElementById('join-group-btn');
         const leaveGroupBtn = document.getElementById('leave-group-btn');
         const createGroupBtn = document.getElementById('create-group-btn');
@@ -457,7 +872,6 @@
             if (groupsToggle) {
                 groupsToggle.addEventListener('click', () => {
                     groupsPanel.classList.toggle('active');
-                    chatPanel.classList.toggle('active');
                 });
             }
         });
@@ -497,13 +911,13 @@
         authSwitchLink.addEventListener('click', () => {
             isLoginMode = !isLoginMode;
             if (isLoginMode) {
-                authTitle.textContent = 'Login to Chat App';
-                authButton.textContent = 'Login';
+                authTitle.textContent = 'Welcome Back!';
+                authButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
                 authSwitchLink.textContent = "Don't have an account? Sign up";
                 nameField.style.display = 'none';
             } else {
                 authTitle.textContent = 'Create an Account';
-                authButton.textContent = 'Sign Up';
+                authButton.innerHTML = '<i class="fas fa-user-plus"></i> Sign Up';
                 authSwitchLink.textContent = 'Already have an account? Login';
                 nameField.style.display = 'block';
             }
@@ -591,6 +1005,8 @@
             
             // Reset chat panel to default state
             currentGroupName.textContent = 'Select a group to start chatting';
+            currentGroupMeta.textContent = 'Choose from your groups';
+            currentGroupAvatar.textContent = 'G';
             joinGroupBtn.style.display = 'none';
             leaveGroupBtn.style.display = 'none';
             messageInput.disabled = true;
@@ -600,7 +1016,9 @@
             clearChat();
             chatMessages.innerHTML = `
                 <div class="join-prompt">
-                    Select a group to view messages
+                    <i class="fas fa-comments"></i>
+                    <h3>Welcome to Talksy!</h3>
+                    <p>Select a group from the sidebar to start chatting with others.</p>
                 </div>
             `;
             
@@ -613,7 +1031,6 @@
             // On mobile, ensure groups panel is visible
             if (window.innerWidth <= 768) {
                 groupsPanel.classList.add('active');
-                chatPanel.classList.remove('active');
             }
         }
 
@@ -621,6 +1038,7 @@
         function initializeApp() {
             showApp();
             userDisplayName.textContent = currentUser.displayName;
+            userAvatar.textContent = currentUser.displayName.charAt(0).toUpperCase();
             
             // Reset UI state first
             resetUIState();
@@ -726,7 +1144,13 @@
             groupsList.innerHTML = '';
             
             if (groups.length === 0) {
-                groupsList.innerHTML = '<div style="padding: 15px; text-align: center; color: #718096;">No groups available</div>';
+                groupsList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-comment-slash"></i>
+                        <h3>No Groups Yet</h3>
+                        <p>Create your first group to start chatting!</p>
+                    </div>
+                `;
                 return;
             }
             
@@ -739,9 +1163,19 @@
                     groupElement.classList.add('active');
                 }
                 
+                const groupInitial = group.name.charAt(0).toUpperCase();
+                
                 groupElement.innerHTML = `
-                    <div class="group-name">${group.name}</div>
-                    <div class="group-meta">${group.memberCount} members • ${new Date(group.createdAt).toLocaleDateString()}</div>
+                    <div class="group-avatar">${groupInitial}</div>
+                    <div class="group-info">
+                        <div class="group-name">${group.name}</div>
+                        <div class="group-meta">
+                            <i class="fas fa-users"></i>
+                            ${group.memberCount} members
+                            <i class="fas fa-circle" style="font-size: 6px;"></i>
+                            ${new Date(group.createdAt).toLocaleDateString()}
+                        </div>
+                    </div>
                 `;
                 
                 groupElement.addEventListener('click', () => {
@@ -757,12 +1191,15 @@
             currentGroup = group;
             renderGroups();
             currentGroupName.textContent = group.name;
+            currentGroupAvatar.textContent = group.name.charAt(0).toUpperCase();
+            currentGroupMeta.textContent = `${group.memberCount} members`;
             
             // Clear previous messages immediately
             clearChat();
             chatMessages.innerHTML = `
                 <div class="join-prompt">
-                    Loading messages...
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <h3>Loading messages...</h3>
                 </div>
             `;
             
@@ -786,10 +1223,12 @@
                     clearChat();
                     chatMessages.innerHTML = `
                         <div class="join-prompt">
+                            <i class="fas fa-user-plus"></i>
                             <h3>Join "${group.name}"</h3>
                             <p>You need to join this group to view messages and chat</p>
                             <button class="btn" onclick="document.getElementById('join-group-btn').click()" 
                                     style="margin-top: 15px;">
+                                <i class="fas fa-user-plus"></i>
                                 Join Group
                             </button>
                         </div>
@@ -800,7 +1239,6 @@
             // On mobile, switch to chat view
             if (window.innerWidth <= 768) {
                 groupsPanel.classList.remove('active');
-                chatPanel.classList.add('active');
             }
         }
 
@@ -842,9 +1280,11 @@
                     loadGroups();
                 } else {
                     console.error('Failed to join group');
+                alert('Failed to join group. Please try again.');
                 }
             } catch (error) {
                 console.error('Error joining group:', error);
+                alert('Error joining group. Please try again.');
             }
         });
 
@@ -871,10 +1311,12 @@
                     clearChat();
                     chatMessages.innerHTML = `
                         <div class="join-prompt">
+                            <i class="fas fa-user-plus"></i>
                             <h3>Join "${currentGroup.name}"</h3>
                             <p>You need to join this group to view messages and chat</p>
                             <button class="btn" onclick="document.getElementById('join-group-btn').click()" 
                                     style="margin-top: 15px;">
+                                <i class="fas fa-user-plus"></i>
                                 Join Group
                             </button>
                         </div>
@@ -884,9 +1326,11 @@
                     loadGroups();
                 } else {
                     console.error('Failed to leave group');
+                    alert('Failed to leave group. Please try again.');
                 }
             } catch (error) {
                 console.error('Error leaving group:', error);
+                alert('Error leaving group. Please try again.');
             }
         });
 
@@ -917,9 +1361,11 @@
                     loadGroups();
                 } else {
                     console.error('Failed to create group');
+                    alert('Failed to create group. Please try again.');
                 }
             } catch (error) {
                 console.error('Error creating group:', error);
+                alert('Error creating group. Please try again.');
             }
         });
 
@@ -936,6 +1382,7 @@
                     if (messages.length === 0) {
                         chatMessages.innerHTML = `
                             <div class="join-prompt">
+                                <i class="fas fa-comment-medical"></i>
                                 <h3>No messages yet</h3>
                                 <p>Be the first to send a message in "${currentGroup.name}"!</p>
                             </div>
@@ -950,10 +1397,12 @@
                     clearChat();
                     chatMessages.innerHTML = `
                         <div class="join-prompt">
+                            <i class="fas fa-user-plus"></i>
                             <h3>Join "${currentGroup.name}"</h3>
                             <p>You need to join this group to view messages and chat</p>
                             <button class="btn" onclick="document.getElementById('join-group-btn').click()" 
                                     style="margin-top: 15px;">
+                                <i class="fas fa-user-plus"></i>
                                 Join Group
                             </button>
                         </div>
@@ -981,6 +1430,12 @@
             
             chatMessages.appendChild(messageElement);
             chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Add highlight animation for new messages
+            messageElement.classList.add('highlight');
+            setTimeout(() => {
+                messageElement.classList.remove('highlight');
+            }, 2000);
         }
 
         // Clear chat messages
@@ -1039,9 +1494,16 @@
         // Show typing indicator
         function showTypingIndicator(data) {
             if (data.isTyping) {
-                typingIndicator.textContent = `${data.displayName} is typing...`;
+                typingIndicator.innerHTML = `
+                    <span>${data.displayName} is typing</span>
+                    <div class="typing-dots">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                `;
             } else {
-                typingIndicator.textContent = '';
+                typingIndicator.innerHTML = '';
             }
         }
 
@@ -1051,8 +1513,18 @@
             if (groupElement) {
                 const metaElement = groupElement.querySelector('.group-meta');
                 if (metaElement) {
-                    metaElement.textContent = `${memberCount} members • ${new Date().toLocaleDateString()}`;
+                    metaElement.innerHTML = `
+                        <i class="fas fa-users"></i>
+                        ${memberCount} members
+                        <i class="fas fa-circle" style="font-size: 6px;"></i>
+                        ${new Date().toLocaleDateString()}
+                    `;
                 }
+            }
+            
+            // Update current group info if active
+            if (currentGroup && currentGroup._id === groupId) {
+                currentGroupMeta.textContent = `${memberCount} members`;
             }
             
             // Update in-memory group data
