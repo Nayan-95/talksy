@@ -35,8 +35,9 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const { Server } = require('socket.io');
 
-// const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/mernsingle';
-const MONGODB_URI='mongodb+srv://manmahanand95_db_user:KqTF47I6WmcrXOeB@msg-app.wv6w8qs.mongodb.net/?retryWrites=true&w=majority&appName=msg-app'
+require('dotenv').config();
+
+const MONGODB_URI = process.env.MONGODB_URI ;
 const JWT_SECRET = process.env.JWT_SECRET || 'dev_jwt_secret_change_me';
 const PORT = process.env.PORT || 4000;
 const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || `http://localhost:4000`; // static served same host
